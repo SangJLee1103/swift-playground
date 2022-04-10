@@ -61,3 +61,31 @@ let desc = "과일은 총 \(apple + banana + orange)개입니다"
 print(desc)
 
 
+//쿼우팅 -> 스위프트에선 더블 쿼우팅으로 처리하기 때문에 문자열과 문자 타입을 확실히 구분해 주어야 한다.
+let Hello = "Hi, I'm winny"
+var message = Hello
+print(message)
+
+
+//트리플 쿼우팅
+let data = """
+안녕하세요?
+오랜만이에요.
+피곤하네요!
+"""
+print(data)
+
+
+//닫힌 범위 연산자
+let a = 1
+let b = 2
+
+for row in a...b {
+    row
+}
+
+//반 닫힌 범위 연산자
+//
+//for row in a..<b {
+//    row
+//}
