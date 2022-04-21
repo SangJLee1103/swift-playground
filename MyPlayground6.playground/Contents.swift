@@ -1,5 +1,7 @@
 //함수
 
+import Foundation
+
 //매개변수와 반환값이 모두 없는 함수
 func printHello(){
     print("안녕하세요!")
@@ -200,10 +202,10 @@ print(k) //30
 
 //일급 객체
 /*1. 객체가 런타임에도 생성이 가능해야함
-  2. 인자값으로 객체를 전달할 수 있어야 한다.
-  3. 반환값으로 객체를 사용할 수 있어야 한다.
-  4. 변수나 데이터 구조 안에 저장할 수 있어야 한다.
-  5. 할당에 사용된 이름과 관계없이 고유한 구별이 가능해야 한다.
+ 2. 인자값으로 객체를 전달할 수 있어야 한다.
+ 3. 반환값으로 객체를 사용할 수 있어야 한다.
+ 4. 변수나 데이터 구조 안에 저장할 수 있어야 한다.
+ 5. 할당에 사용된 이름과 관계없이 고유한 구별이 가능해야 한다.
  */
 
 
@@ -328,7 +330,7 @@ func failThrough(){
 }
 
 func divide1(base: Int, success sCallback: () -> Void, fail fCallBack: //클로저(익명함수) 사용
-            () -> Void) -> Int {
+             () -> Void) -> Int {
     guard base != 0 else{
         fCallBack()
         return 0
@@ -370,7 +372,9 @@ let fnn1 = fnn(30)
 
 
 
-//클로저: 내부 함수와 내부 함수에 영향을 미치는 주변환경을 모두 포함한 객체 , !!스위프트에서의 클로저: 익명함수
+//클로저(전역 함수, 중첩 함수, 클로저 표현식): 내부 함수와 내부 함수에 영향을 미치는 주변환경을 모두 포함한 객체 , !!스위프트에서의 클로저: 익명함수
+
+
 
 func basic(param: Int) -> (Int) -> Int {
     let value = param + 20
@@ -389,4 +393,103 @@ let result3 = basic(param: 10) //클로저가 생성됨  func append(add: Int) -
 result3(10) //40
 
 
+
+//클로저 표현식
+
+let f = { () -> () in
+    print("클로저가 실행됩니다.")
+}
+f()
+
+({ () -> Void in
+    print("클로저가 실행됨")
+})()
+
+
+var val = [1,9,5,7,3,2]
+
+val.sorted(by: {
+    (s1: Int, s2: Int) -> Bool in
+    if s1 > s2{
+        return true
+    }else {
+        return false
+    }
+})
+
+//간결화
+val.sort(by: {(s1: Int, s2: Int) -> Bool in return s1 > s2})
+
+val.sort(by: {(s1:Int, s2: Int) in return s1 > s2})
+
+val.sort(by: {s1, s2 in return s1 > s2})
+
+val.sort(by: { $0 > $1})
+
+
+//트레일링 클로저
+val.sort(){ (s1, s2) in
+    return s1 > s2
+}
+
+//@escaping : 클로저를 변수나 상수에 대입하거나 중첩 함수 내부에서 사용해야 할 경우에 사용
+
+// 스위프트에서 함수의 인자값으로 전달된 클로저는 기본적으로 탈출 불가의 성격 -> 1. 함수내에서, 2. 직접 실행을 위해서만 사용해야함
+
+//func callback(fn: () -> Void) {
+//    let f = fn
+//    f()
+//}
+//
+//callback {
+//    print("closure 실행")
+//}
+
+
+func callback(fn: @escaping() -> Void) {
+    let f = fn
+    f()
+}
+
+callback {
+    print("closure 실행")
+}
+
+//@autoescape: 인자값으로 전달된 일반 구문이나 함수 등을 클로저로 래핑하는 역할
+func condition(stmt: () -> Bool) {
+    if stmt() == true{
+        print("참")
+    }else {
+        print("거짓")
+    }
+}
+
+
+condition(stmt: {
+    4 > 2
+})
+
+condition{ () -> Bool in
+    return (4 > 2)
+}
+
+condition {
+    return(4>2)
+}
+
+condition{
+    4 > 2
+}
+
+// @autoclosure를 통해 더 자연스럽고 익숙한 구문으로 사용, 지연된 실행 지원
+
+func condition1(stmt: @autoclosure () -> Bool) {
+    if stmt() == true{
+        print("참")
+    }else {
+        print("거짓")
+    }
+}
+
+condition1(stmt: (4 > 2))
 
